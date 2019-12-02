@@ -1,30 +1,38 @@
-import { ADD_TO_CART,REMOVE_ITEM,SUB_QUANTITY,ADD_QUANTITY } from './action-types/CartActionTypes';
+import { ADD_TO_CART,REMOVE_ITEM,DEC_FROM_CART,INC_TO_CART, GET_PRODUCTS, GET_CART } from './action-types/CartActionTypes';
 
-//add cart action
-export const addToCart= (id)=>{
+export const addToCartAction= (id)=>{
     return{
         type: ADD_TO_CART,
         id
     }
 }
-//remove item action
-export const removeItem=(id)=>{
+export const removeItemAction=(id)=>{
     return{
         type: REMOVE_ITEM,
         id
     }
 }
-//subtract qt action
-export const subtractQuantity=(id)=>{
+export const subtractQuantityAction=(id)=>{
     return{
-        type: SUB_QUANTITY,
+        type: DEC_FROM_CART,
         id
     }
 }
-//add qt action
-export const addQuantity=(id)=>{
+export const addQuantityAction=(id)=>{
     return{
-        type: ADD_QUANTITY,
+        type: INC_TO_CART,
         id
+    }
+}
+export const getProductsAction=(products)=>{
+    return {
+        type: GET_PRODUCTS,
+        products: products
+    }
+}
+export const getCartAction=(cart)=>{
+    return {
+        type: GET_CART,
+        cart: cart
     }
 }

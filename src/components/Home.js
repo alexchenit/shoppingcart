@@ -1,22 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addToCart } from '../actions/cartActions';
+import { getAllProducts, addProductToCart } from '../util/services';
 
  class Home extends Component{
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
-        this.getStoredItems = this.getStoredItems.bind(this);
-        this.getStoredItems();
     } 
 
-    getStoredItems = ()=>{
-        let storedItems = JSON.parse(localStorage.getItem('shoppingcart')) || '';
-        if (storedItems != null && storedItems.length > 0) {
-            storedItems.forEach(item => {
-                this.props.addToCart(item.id)
-            });; 
-        }        
+    componentDidMount() {
+        console.log("getDate() is invoked;");
+        this.props.getProducts();
     }
 
     handleClick = (id)=>{
@@ -24,7 +18,7 @@ import { addToCart } from '../actions/cartActions';
     }
 
     render(){
-        let itemList = this.props.items.map(item=>{
+        let itemList = this.props.products.map(item=>{
             return(
                 <tr  key={item.id}>
                         <td >
@@ -57,13 +51,16 @@ import { addToCart } from '../actions/cartActions';
 }
 const mapStateToProps = (state)=>{
     return {
-      items: state.items
+      products: state.products,
+      cart: state.cart,
+      total: state.total,
     }
   }
 const mapDispatchToProps= (dispatch)=>{
     
     return{
-        addToCart: (id)=>{dispatch(addToCart(id))}
+        addToCart: (id)=>{addProductToCart(dispatch,id)},
+        getProducts: ()=>{getAllProducts(dispatch)}
     }
 }
 

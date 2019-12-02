@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { removeItem,addQuantity,subtractQuantity} from '../actions/cartActions';
+import { getCart, addProductToCart, removeItem, subtractQuantity } from '../util/services';
 
 
 class Cart extends Component{
+
+    componentDidMount() {
+        console.log("getCart() is invoked;");
+        this.props.getCart();
+    }
+
 
     //to remove the item completely
     handleRemove = (id)=>{
@@ -20,13 +26,13 @@ class Cart extends Component{
     }
     render(){
               
-        let addedItems = this.props.items.length ?
+        let addedItems = this.props.cart.length ?
             (  
-                this.props.items.map(item=>{
+                this.props.cart.map(item=>{
                     return(
                        
-                        <tr className="collection-item avatar" key={item.id}>
-                            <td>
+                        <tr key={"id" + item.id}>
+                            <td key={"title"+ item.id}>
                                     <div> 
                                         <h4>{item.title}</h4>
                                         <img src={item.img} alt={item.img} className=""/>
@@ -38,13 +44,13 @@ class Cart extends Component{
                                             <b>Quantity: {item.quantity}</b> 
                                         </p>
                                         <div>
-                                            <button type="button" class="btn">
-                                                <Link to="/cart"><span class="glyphicon glyphicon-plus" onClick={()=>{this.handleAddQuantity(item.id)}}></span></Link>
+                                            <button type="button" className="btn">
+                                                <Link to="/cart"><span className="glyphicon glyphicon-plus" onClick={()=>{this.handleAddQuantity(item.id)}}></span></Link>
                                             </button>
-                                            <button type="button" class="btn">
-                                                <Link to="/cart"><span class="glyphicon glyphicon-minus" onClick={()=>{this.handleSubtractQuantity(item.id)}}></span></Link>
+                                            <button type="button" className="btn">
+                                                <Link to="/cart"><span className="glyphicon glyphicon-minus" onClick={()=>{this.handleSubtractQuantity(item.id)}}></span></Link>
                                             </button>
-                                            <button type="button" class="btn btn-primary">
+                                            <button type="button" className="btn btn-primary">
                                                 <span onClick={()=>{this.handleRemove(item.id)}}>Remove</span>
                                             </button>
                                         </div>
@@ -76,15 +82,18 @@ class Cart extends Component{
 
 const mapStateToProps = (state)=>{
     return{
-        items: state.addedItems,
+        products: state.products,
+        cart: state.cart,
+        total: state.total
         //addedItems: state.addedItems
     }
 }
 const mapDispatchToProps = (dispatch)=>{
     return{
-        removeItem: (id)=>{dispatch(removeItem(id))},
-        addQuantity: (id)=>{dispatch(addQuantity(id))},
-        subtractQuantity: (id)=>{dispatch(subtractQuantity(id))}
+        getCart: ()=>{getCart(dispatch)},
+        removeItem: (id)=>{removeItem(dispatch,id)},
+        addQuantity: (id)=>{addProductToCart(dispatch, id)},
+        subtractQuantity: (id)=>{subtractQuantity(dispatch, id)}
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Cart)
